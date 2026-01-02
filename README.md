@@ -11,6 +11,8 @@ CI配置：
 
 git init
 
+git remote add origin https://github.com/qwx-hub/CampusTradingPlatform.git
+
 git add .
 
 git commit -m "Add CI workflow and Unit Tests"
