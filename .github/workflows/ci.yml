@@ -1,0 +1,35 @@
+name: C++ Project CI
+
+# 触发条件：推送到 main 分支或提交 Pull Request 到 main 时
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    # 运行环境：CI 通常推荐用 Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 检出代码
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. 配置构建系统
+    # -S . 表示源码在当前目录，-B build 表示构建文件生成在 build 文件夹中
+    # -DCMAKE_BUILD_TYPE=Release 使用发布模式
+    - name: Configure CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+    # 3. 编译项目，自动下载 GoogleTest 并编译 executable
+    - name: Build project
+      run: cmake --build build --config Release
+
+    # 4. 运行测试
+    # 进入 build 目录，运行在 CMakeLists.txt 中定义的 "RunTests" 可执行文件
+    - name: Run Google Tests
+      run: |
+        cd build
+        ./RunTests
